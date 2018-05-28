@@ -1,0 +1,26 @@
+diff --git a/file.module b/file.module
+index 6902db6..8f44776 100644
+--- a/file.module
++++ b/file.module
+@@ -659,12 +659,7 @@ function file_cron() {
+     foreach ($files as $file) {
+       $references = \Drupal::service('file.usage')->listUsage($file);
+       if (empty($references)) {
+-        if (file_exists($file->getFileUri())) {
+-          $file->delete();
+-        }
+-        else {
+-          \Drupal::logger('file system')->error('Could not delete temporary file "%path" during garbage collection', ['%path' => $file->getFileUri()]);
+-        }
++        $file->delete();
+       }
+       else {
+         \Drupal::logger('file system')->info('Did not delete temporary file "%path" during garbage collection because it is in use by the following modules: %modules.', ['%path' => $file->getFileUri(), '%modules' => implode(', ', array_keys($references))]);
+@@ -672,7 +667,6 @@ function file_cron() {
+     }
+   }
+ }
+-
+ /**
+  * Saves file uploads to a new location.
+  *
