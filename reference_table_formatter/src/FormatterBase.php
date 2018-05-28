@@ -43,11 +43,16 @@ abstract class FormatterBase extends CoreFormatterBase implements ContainerFacto
     $entity_storage = $this->entityManager->getStorage($entity_type);
     $entities = [];
     foreach ($items as $item) {
-      $entity = $entity_storage->load($this->getEntityIdFromFieldItem($item));
-      if ($entity->access('view')) {
-        $entities[] = $entity;
+      //$entity = $entity_storage->load($this->getEntityIdFromFieldItem($item));
+      $entity_id = $this->getEntityIdFromFieldItem($item);
+      if ($entity_id) {
+        $entity = $entity_storage->load($entity_id);
+        if ($entity && $entity->access('view')) {
+          $entities[] = $entity;
+        }
       }
-    } return $entities;
+    }
+    return $entities;
   }
 
   /**
